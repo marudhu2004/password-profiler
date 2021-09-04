@@ -58,6 +58,13 @@ class TestCreateWordList(unittest.TestCase):
                     self.assertEquals(gen_pass, test_pass)
 
 
+    def test_empty_charset(self):
+        create_word_list('out.txt', lower=False)
+
+        # Checking if a output file was created
+        self.assertFalse(os.path.exists('tests/out.txt'))
+
+
     def tearDown(self):
         path = os.path.join(os.getcwd(), 'tests/out.txt')
         
