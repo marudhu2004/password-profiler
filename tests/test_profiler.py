@@ -1,5 +1,5 @@
 import unittest
-from profiler import *
+from password_profiler.generator import *
 
 
 class TestNextPass(unittest.TestCase):
