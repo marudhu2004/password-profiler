@@ -35,3 +35,9 @@ class TestNextPass(unittest.TestCase):
         char_set = alpha
         result = next_pass(len(current_pass) - 1, char_set, current_pass)
         self.assertEquals(result, 'aaaaa')
+
+
+class TestCreateWordList(unittest.TestCase):
+
+    def test_one_char(self):
+        pass
