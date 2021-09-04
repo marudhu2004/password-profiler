@@ -3,31 +3,46 @@ alpha = "abcdefghijklmnopqrstuvwxyz"
 numeric = "1234567890"
 symbols = "!@#$%^&*()_ "
 
+
 # The fuction to create the password list based on give coditions
-def create_word_list():
+def create_word_list(out_file, num = False, special = False, min_len = 3, max_len = 3, upper = False, lower = True, char_set=""):
     
-    # Getting the basic settings 
-    settings = {'num': False, 'special': False, "length": (3, 3)}
-
     # Getting the character set setup
-    char_set = alpha + alpha.upper()
-    if settings['num']:
-        char_set += numeric
-    if settings['special']:
-        char_set += symbols
-    
-    # Setting up length variables
-    max_len = settings['length'][1]
-    min_len = settings['length'][0]
+    charset = ""
+    if lower:
+        charset += alpha
+    if upper:
+        charset += alpha.upper()
+    if num:
+        charset += numeric
+    if special:
+        charset += symbols
 
+    # Checking if charset is not empty
+    if char_set == "":
+        print("there must be atleast some characters to create password")
+        return
+
+    # If a specific charset is specified
+    if char_set:
+        charset = char_set
+    
     # Creating the inital string to iterate upon
     password_string = char_set[0] * min_len
     char_pass_index = min_len - 1
 
-    while True:
-        password_string = next_pass(len(password_string) - 1, char_set, password_string)
-        if len(password_string) > max_len: break
-        print(password_string)
+    # Opening the output file    
+    with open(out_file, 'w') as file:
+        while True:
+            
+            # Getting the new password strings
+            password_string = next_pass(len(password_string) - 1, charset, password_string)
+            
+            # Leaving if the last pass reached
+            if len(password_string) > max_len: break
+            
+            # Writing the password to the file
+            file.write(password_string+"\n")
 
 
 # Rcursive function for next char update
@@ -52,3 +67,7 @@ def next_pass(char_pass_index, char_set, current_pass):
     
     # Returning the new password string
     return new_pass
+
+
+if __name__ == '__main__':
+    create_word_list('out.txt', char_set='1234')
