@@ -1,7 +1,7 @@
 import unittest
 import os
 from password_profiler.generator import *
-
+from .util import check_file
 
 class TestNextPass(unittest.TestCase):
     
@@ -40,22 +40,22 @@ class TestNextPass(unittest.TestCase):
 
 class TestCreateWordList(unittest.TestCase):
 
+    def test_fixed_len_passwords(self):
+
+        # Creating the wordlist
+        create_word_list('tests/out.txt', min_len=3, max_len=3)
+        
+        # Checking if the wordlist is properly generated
+        check_file(self, 'tests/out.txt', 'tests/wordlists/same_length.txt')
+
+
     def test_specific_charset(self):
 
         # Creating the wordlist
         create_word_list('tests/out.txt', min_len=3, max_len=3, char_set='1234')
 
         # Checking if the wordlist is properly generated
-        with open('tests/out.txt', 'r') as created_file:
-            with open('tests/wordlists/specific_charset.txt', 'r') as case_file:
-                
-                # Reading the password list
-                gen_pass = created_file.readline()
-                test_pass = case_file.readline()
-
-                # Checking if the passwords match
-                if gen_pass == test_pass:
-                    self.assertEquals(gen_pass, test_pass)
+        check_file(self, 'tests/out.txt', 'tests/wordlists/specific_charset.txt')
 
 
     def test_empty_charset(self):

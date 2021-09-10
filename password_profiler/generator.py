@@ -4,6 +4,12 @@ numeric = "1234567890"
 symbols = "!@#$%^&*()_ "
 
 
+# The function to manage masked characters inorder to have more consise wordlists
+def apply_mask(mask, special_sets=None):
+
+    # Getting the password length
+    length = len(mask)
+
 # The fuction to create the password list based on give coditions
 def create_word_list(out_file, num = False, special = False, min_len = 3, max_len = 3, upper = False, lower = True, char_set=""):
     
@@ -19,7 +25,7 @@ def create_word_list(out_file, num = False, special = False, min_len = 3, max_le
         charset += symbols
 
     # Checking if charset is not empty
-    if char_set == "":
+    if charset == "":
         print("there must be atleast some characters to create password")
         return
 
@@ -28,22 +34,22 @@ def create_word_list(out_file, num = False, special = False, min_len = 3, max_le
         charset = char_set
     
     # Creating the inital string to iterate upon
-    password_string = char_set[0] * min_len
+    password_string = charset[0] * min_len
     char_pass_index = min_len - 1
 
     # Opening the output file    
     with open(out_file, 'w') as file:
         while True:
             
+            # Leaving if the last pass reached
+            if len(password_string) > max_len: break
+
+            # Writing the password to the file
+            file.write(password_string+"\n")
+            
             # Getting the new password strings
             password_string = next_pass(len(password_string) - 1, charset, password_string)
             
-            # Leaving if the last pass reached
-            if len(password_string) > max_len: break
-            
-            # Writing the password to the file
-            file.write(password_string+"\n")
-
 
 # Rcursive function for next char update
 def next_pass(char_pass_index, char_set, current_pass):
@@ -70,4 +76,4 @@ def next_pass(char_pass_index, char_set, current_pass):
 
 
 if __name__ == '__main__':
-    create_word_list('out.txt', char_set='1234')
+    create_word_list('out.txt', max_len=3, min_len=3, lower=True)
