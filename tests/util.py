@@ -1,4 +1,8 @@
+
+# Function to check if the files are identical
 def check_file(self, out_file, test_file):
+
+    # Opening the output and test case files
     with open(out_file, 'r') as created_file:
         with open(test_file, 'r') as case_file:
 
