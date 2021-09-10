@@ -48,6 +48,15 @@ class TestCreateWordList(unittest.TestCase):
         # Checking if the wordlist is properly generated
         check_file(self, 'tests/out.txt', 'tests/wordlists/same_length.txt')
 
+    
+    def test_varying_len_passwords(self):
+
+        # Creating the wordlist
+        create_word_list('tests/out.txt', min_len=3, max_len=4)
+        
+        # Checking if the wordlist is properly generated
+        check_file(self, 'tests/out.txt', 'tests/wordlists/varying_lengths.txt')
+
 
     def test_specific_charset(self):
 
