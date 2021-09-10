@@ -1,7 +1,7 @@
 import unittest
 import os
 from password_profiler.generator import *
-from .util import check_file
+from util import check_file
 
 class TestNextPass(unittest.TestCase):
     
