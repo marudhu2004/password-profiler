@@ -4,52 +4,23 @@ numeric = "1234567890"
 symbols = "!@#$%^&*()_ "
 
 
-# The function to manage masked characters inorder to have more consise wordlists
-def apply_mask(mask, special_sets=None):
-
-    # Getting the password length
-    length = len(mask)
-
 # The fuction to create the password list based on give coditions
 def create_word_list(out_file, num = False, special = False, min_len = 3, max_len = 3, upper = False, lower = True, char_set=""):
-    
-    # Getting the character set setup
-    charset = ""
-    if lower:
-        charset += alpha
-    if upper:
-        charset += alpha.upper()
-    if num:
-        charset += numeric
-    if special:
-        charset += symbols
 
-    # Checking if charset is not empty
-    if charset == "":
-        print("there must be atleast some characters to create password")
-        return
-
-    # If a specific charset is specified
-    if char_set:
-        charset = char_set
-    
-    # Creating the inital string to iterate upon
-    password_string = charset[0] * min_len
-    char_pass_index = min_len - 1
+    # Creating the generator object
+    password_list = password_list_generator(num, special, min_len, max_len, upper, lower, char_set)
 
     # Opening the output file    
     with open(out_file, 'w') as file:
-        while True:
-            
-            # Leaving if the last pass reached
-            if len(password_string) > max_len: break
 
-            # Writing the password to the file
-            file.write(password_string+"\n")
-            
-            # Getting the new password strings
-            password_string = next_pass(len(password_string) - 1, charset, password_string)
-            
+        # Writing the passwords to the output file
+        try:
+            for password in password_list:
+                file.write(password + '\n')
+        
+        except ValueError:
+            print('the charset must not be empty plz try with different settings')
+            return
 
 # Rcursive function for next char update
 def next_pass(char_pass_index, char_set, current_pass):
@@ -74,6 +45,55 @@ def next_pass(char_pass_index, char_set, current_pass):
     # Returning the new password string
     return new_pass
 
+# Generator version of getting passwords
+def password_list_generator(num = False, special = False, min_len = 3, max_len = 3, upper = False, lower = True, char_set=""):
+    
+ # Getting the character set setup
+    charset = ""
+    if lower:
+        charset += alpha
+    if upper:
+        charset += alpha.upper()
+    if num:
+        charset += numeric
+    if special:
+        charset += symbols
+
+    # Checking if charset is not empty
+    if charset == "":
+        raise ValueError("there must be atleast 1 character in char set! (check the function settings)")
+
+    # If a specific charset is specified
+    if char_set:
+        charset = char_set
+    
+    # Creating the inital string to iterate upon
+    password_string = charset[0] * min_len
+    char_pass_index = min_len - 1
+
+    # Looping to get the possible combinations
+    while True:
+            
+        # Leaving if the last pass reached
+        if len(password_string) > max_len: break
+
+        # Writing the password to the file
+        yield password_string
+        
+        # Getting the new password strings
+        password_string = next_pass(len(password_string) - 1, charset, password_string)
+
+
+
+# To deal with knowing specific part chars
+def with_known_chars(known_chars, symbol):
+
+    # Getting the mask and length needed to fill
+    lenght = len(known_chars)
+    mask = [1 if i == symbol else 0 for i in known_chars]
+    gen_len = sum(mask)
+
+    
 
 if __name__ == '__main__':
     create_word_list('out.txt', max_len=3, min_len=3, lower=True)
