@@ -48,7 +48,7 @@ def next_pass(char_pass_index, char_set, current_pass):
 # Generator version of getting passwords
 def password_list_generator(num = False, special = False, min_len = 3, max_len = 3, upper = False, lower = True, char_set=""):
     
- # Getting the character set setup
+    # Getting the character set setup
     charset = ""
     if lower:
         charset += alpha
@@ -86,14 +86,38 @@ def password_list_generator(num = False, special = False, min_len = 3, max_len =
 
 
 # To deal with knowing specific part chars
-def with_known_chars(known_chars, symbol):
+def with_known_chars(known_chars, symbol, outfile, num = False, special = False, upper = False, lower = True, char_set=""):
 
     # Getting the mask and length needed to fill
     lenght = len(known_chars)
     mask = [1 if i == symbol else 0 for i in known_chars]
     gen_len = sum(mask)
 
+    # Creating paswords with the given conditions
+    fill_vals = password_list_generator(num , special, gen_len, gen_len, upper, lower, char_set)
     
+    # Opening the output file to write to
+    with open(outfile, 'w') as file:
+
+        # Going through the list of generated passwords
+        for value in fill_vals:
+            password = ""
+            count = 0
+            
+            # Assigining the generated characters requires positions
+            for i, v in enumerate(mask):
+                # If generated value needed
+                if v:
+                    password += value[count]
+                    count += 1
+
+                # If value alreaady known
+                else:
+                    password += known_chars[i]
+
+            # Saving the generated password
+            file.write(password+"\n")
+
 
 if __name__ == '__main__':
-    create_word_list('out.txt', max_len=3, min_len=3, lower=True)
+    with_known_chars("max~~", '~', 'test.txt')
