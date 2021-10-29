@@ -93,6 +93,25 @@ def with_known_chars(known_chars, symbol, outfile, num = False, special = False,
     mask = [1 if i == symbol else 0 for i in known_chars]
     gen_len = sum(mask)
 
+    # Creating the charset to check if the call is valid
+    charset=""
+    if lower:
+        charset += alpha
+    if upper:
+        charset += alpha.upper()
+    if num:
+        charset += numeric
+    if special:
+        charset += symbols
+
+    # raising an error if there is nothing to substitute with
+    if gen_len == 0:
+        raise ValueError("there should atleast be one character to be substitute in the password") 
+    
+    # Raising an error if the symbol is in the charset
+    if symbol in charset:
+        raise ValueError("The symbol must not be a part of the charset")
+
     # Creating paswords with the given conditions
     fill_vals = password_list_generator(num , special, gen_len, gen_len, upper, lower, char_set)
     
@@ -120,4 +139,4 @@ def with_known_chars(known_chars, symbol, outfile, num = False, special = False,
 
 
 if __name__ == '__main__':
-    with_known_chars("max~~", '~', 'test.txt')
+    with_known_chars("max", '~', 'test.txt')

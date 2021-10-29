@@ -81,3 +81,13 @@ class TestCreateWordList(unittest.TestCase):
         if os.path.exists(path):
             os.remove(path)
 
+
+class TestWithKnownChars(unittest.TestCase):
+
+    def test_no_char_to_substitute(self):
+        with self.assertRaises(ValueError):
+            with_known_chars("hello", '~', 'out.txt')
+    
+    def test_symbol_in_charset(self):
+        with self.assertRaises(ValueError):
+            with_known_chars("helloa", 'a', 'out.txt')
