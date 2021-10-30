@@ -84,6 +84,14 @@ class TestCreateWordList(unittest.TestCase):
 
 class TestWithKnownChars(unittest.TestCase):
 
+    def test_base_case(self):
+
+        # Generating the password list
+        with_known_chars("m~ax~~", '~', 'out.txt')
+
+        # Checking if its as expected
+        check_file(self, 'out.txt', 'tests/wordlists/base_substitution_case.txt')
+
     def test_no_char_to_substitute(self):
         with self.assertRaises(ValueError):
             with_known_chars("hello", '~', 'out.txt')
