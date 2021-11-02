@@ -85,15 +85,22 @@ class TestWithKnownChars(unittest.TestCase):
     def test_base_case(self):
 
         # Generating the password list
-        self.generator.with_known_chars("m~ax~~", '~', 'out.txt')
+        self.generator.with_known_chars("m~ax~~", '~', 'tests/out.txt')
 
         # Checking if its as expected
         check_file(self, 'out.txt', 'tests/wordlists/base_substitution_case.txt')
 
     def test_no_char_to_substitute(self):
         with self.assertRaises(ValueError):
-            self.generator.with_known_chars("hello", '~', 'out.txt')
+            self.generator.with_known_chars("hello", '~', '/tests/out.txt')
     
     def test_symbol_in_charset(self):
         with self.assertRaises(ValueError):
-            self.generator.with_known_chars("helloa", 'a', 'out.txt')
+            self.generator.with_known_chars("helloa", 'a', '/tests/out.txt')
+
+    def tearDown(self):
+        path = os.path.join(os.getcwd(), 'tests/out.txt')
+        
+        # Deleting if the output file exists
+        if os.path.exists(path):
+            os.remove(path)
