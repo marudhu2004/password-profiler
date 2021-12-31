@@ -98,47 +98,22 @@ class PasswordGenerator:
             password_string = self.next_pass(len(password_string) - 1, password_string)
 
 
-    # To deal with knowing specific part chars
-    def with_known_chars(self, known_chars, symbol, outfile):
+# Dealing with lists with know chars
+def list_with_masks(base, mapping, outfile):
+    
+    # Setting up required info
+    keys = mapping.keys()
+    fill_string = [i for i in bass if i not in keys]
+    max_len = len(fill_string)
+    char_list = []
 
-        # Getting the mask and length needed to fill
-        lenght = len(known_chars)
-        mask = [1 if i == symbol else 0 for i in known_chars]
-        gen_len = sum(mask)
-
-        # raising an error if there is nothing to substitute with
-        if gen_len == 0:
-            raise ValueError("there should atleast be one character to be substitute in the password") 
+    # Getting the first case for the generation
+    for i, val in enumerate(base):
         
-        # Raising an error if the symbol is in the charset
-        if symbol in self.charset:
-            raise ValueError("The symbol must not be a part of the charset")
-
-        # Creating paswords with the given conditions
-        fill_vals = self.password_list_generator()
-        
-        # Opening the output file to write to
-        with open(outfile, 'w') as file:
-
-            # Going through the list of generated passwords
-            for value in fill_vals:
-                password = ""
-                count = 0
-                
-                # Assigining the generated characters requires positions
-                for i, v in enumerate(mask):
-                    # If generated value needed
-                    if v:
-                        password += value[count]
-                        count += 1
-
-                    # If value alreaady known
-                    else:
-                        password += known_chars[i]
-
-                # Saving the generated password
-                file.write(password+"\n")
+        # if a symbol adding the first val of symbol
+        if val in keys:
+            char_list.append(val)
 
 
 if __name__ == '__main__':
-    with_known_chars("~K~m~a~~x~", '~', 'test.txt')
+    pass
