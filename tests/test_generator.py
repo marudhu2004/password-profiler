@@ -36,7 +36,38 @@ class TestNextPass(unittest.TestCase):
         current_pass = "zzzz"
         result = self.generator.next_pass(len(current_pass) - 1, current_pass)
         self.assertEquals(result, 'aaaaa')
+    
+    def test_with_masks_increment(self):
 
+        # Dealing with mask based increment
+        current_pass = "aaadd"
+        mask = "!!!^^"
+        result = self.generator.next_pass(len(current_pass) - 1, current_pass, mask, mapping={'!': 'abc', '^':'def'})
+        self.assertEquals(result, 'aaade')
+
+    def test_with_mask_carry(self):
+
+        # Dealing with mask based increment
+        current_pass = "aaadf"
+        mask = "!!!^^"
+        result = self.generator.next_pass(len(current_pass) - 1, current_pass, mask, mapping={'!': 'abc', '^':'def'})
+        self.assertEquals(result, 'aaaed')
+    
+    def test_with_mask_carry_between_symbols(self):
+
+        # Dealing with mask based increment
+        current_pass = "aaaff"
+        mask = "!!!^^"
+        result = self.generator.next_pass(len(current_pass) - 1, current_pass, mask, mapping={'!': 'abc', '^':'def'})
+        self.assertEquals(result, 'aabdd')
+
+    def test_with_mask_add_char(self):
+
+        # Dealing with mask based increment
+        current_pass = "cccff"
+        mask = "!!!^^"
+        result = self.generator.next_pass(len(current_pass) - 1, current_pass, mask, mapping={'!': 'abc', '^':'def'})
+        self.assertEquals(result, 'aaaadd')
 
 class TestCreateWordList(unittest.TestCase):
 
