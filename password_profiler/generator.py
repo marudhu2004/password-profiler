@@ -139,8 +139,7 @@ class PasswordGenerator:
                         passwd += v
 
                 # Writing the password generated to the outfile
-                file.write(passwd+"\n")
-                print(passwd)
+                file.write(passwd + "\n")
 
                 # Updating the fill vals
                 fill_vals = self.next_pass(pos, fill_vals, mask=fill_string, mapping=mapping)
@@ -149,4 +148,4 @@ class PasswordGenerator:
 if __name__ == '__main__':
 
     gen = PasswordGenerator()
-    gen.list_with_masks('he!l!o^^', {'!': 'abl', '^':"123"}, 'test.txt')
+    gen.list_with_masks('^hello^!!!', {'^': '1234', '!': 'abcd'}, 'test.txt')

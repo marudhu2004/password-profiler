@@ -80,7 +80,7 @@ class TestCreateWordList(unittest.TestCase):
         self.generator.create_word_list('tests/out.txt')
         
         # Checking if the wordlist is properly generated
-        check_file(self, 'tests/out.txt', 'tests/wordlists/same_length.txt')
+        check_file(self, 'tests/out.txt', 'tests/wordlists/normal/same_length.txt')
     
     def test_varying_len_passwords(self):
 
@@ -89,7 +89,7 @@ class TestCreateWordList(unittest.TestCase):
         self.generator.create_word_list('tests/out.txt')
         
         # Checking if the wordlist is properly generated
-        check_file(self, 'tests/out.txt', 'tests/wordlists/varying_lengths.txt')
+        check_file(self, 'tests/out.txt', 'tests/wordlists/normal/varying_lengths.txt')
 
     def test_specific_charset(self):
 
@@ -98,7 +98,36 @@ class TestCreateWordList(unittest.TestCase):
         generator.create_word_list('tests/out.txt')
 
         # Checking if the wordlist is properly generated
-        check_file(self, 'tests/out.txt', 'tests/wordlists/specific_charset.txt')
+        check_file(self, 'tests/out.txt', 'tests/wordlists/normal/specific_charset.txt')
+
+    def tearDown(self):
+        path = os.path.join(os.getcwd(), 'tests/out.txt')
+        
+        # Deleting if the output file exists
+        if os.path.exists(path):
+            os.remove(path)
+
+
+class TestListsWithMasks(unittest.TestCase):
+
+    def setUp(self):
+        self.generator = PasswordGenerator()
+
+    def test_single_mask(self):
+
+        # Creating the wordlist
+        self.generator.list_with_masks('^hello^', {'^': '1234'}, 'tests/out.txt')
+        
+        # Checking if the wordlist is properly generated
+        check_file(self, 'tests/out.txt', 'tests/wordlists/masked/single_mask.txt')
+
+    def test_multiple_masks(self):
+        
+        # Creating the wordlist
+        self.generator.list_with_masks('^hello^!!!', {'^': '1234', '!': 'abcd'}, 'tests/out.txt')
+        
+        # Checking if the wordlist is properly generated
+        check_file(self, 'tests/out.txt', 'tests/wordlists/masked/multi_masks.txt')
 
     def tearDown(self):
         path = os.path.join(os.getcwd(), 'tests/out.txt')
