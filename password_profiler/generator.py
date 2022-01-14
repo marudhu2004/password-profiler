@@ -55,23 +55,32 @@ class PasswordGenerator:
 
 
     # Rcursive function for next char update
-    def next_pass(self, char_pass_index, current_pass):
+    def next_pass(self, char_pass_index, current_pass, mask=None, mapping=None):
         
         # In case a new character is needed to be added
         if char_pass_index < 0:
             return self.charset[0] + current_pass
 
+        # Incase a mapping is passed
+        if mask != None and mapping != None:
+            self.charset = mapping[mask[char_pass_index]]
+
         # Getting current char index in char_set
         char_index = self.charset.index(current_pass[char_pass_index])
         pass_len = len(current_pass)
         char_set_len = len(self.charset)
-        
+
         # Creating new password
         new_char = self.charset[(char_index + 1) % char_set_len]
         new_pass = current_pass[0 : char_pass_index] + new_char + current_pass[char_pass_index + 1 : pass_len]
         
         # Checking if the current char needs to be carried again
         if char_index >= char_set_len - 1:
+        
+            # Incase a mask and mapping is given
+            if mask != None and mapping != None:
+                return self.next_pass(char_pass_index - 1, new_pass, mask, mapping)
+        
             return self.next_pass(char_pass_index - 1, new_pass)
         
         # Returning the new password string
@@ -98,22 +107,46 @@ class PasswordGenerator:
             password_string = self.next_pass(len(password_string) - 1, password_string)
 
 
-# Dealing with lists with know chars
-def list_with_masks(base, mapping, outfile):
-    
-    # Setting up required info
-    keys = mapping.keys()
-    fill_string = [i for i in bass if i not in keys]
-    max_len = len(fill_string)
-    char_list = []
-
-    # Getting the first case for the generation
-    for i, val in enumerate(base):
+    # Dealing with lists with know chars
+    def list_with_masks(self, base, mapping, outfile):
         
-        # if a symbol adding the first val of symbol
-        if val in keys:
-            char_list.append(val)
+        # Setting up required info
+        keys = mapping.keys()
+        fill_string = [i for i in base if i in keys]
+        fill_vals = ""
+        pos = len(fill_string) - 1
+        max_len = len(fill_string)
+        char_list = []
+
+        # Getting the first case for the generation
+        for i in fill_string:
+            fill_vals += mapping[i][0]
+
+        # Opening file to save generated passwords
+        with open(outfile, 'w') as file:    
+            while len(fill_vals) == max_len:
+
+                # Setting up values to create a password
+                passwd = ''
+                place = 0
+
+                # Creating the password
+                for i, v in enumerate(base):
+                    if v in keys:
+                        passwd += fill_vals[place]
+                        place += 1
+                    else:
+                        passwd += v
+
+                # Writing the password generated to the outfile
+                file.write(passwd+"\n")
+                print(passwd)
+
+                # Updating the fill vals
+                fill_vals = self.next_pass(pos, fill_vals, mask=fill_string, mapping=mapping)
 
 
 if __name__ == '__main__':
-    pass
+
+    gen = PasswordGenerator()
+    gen.list_with_masks('he!l!o^^', {'!': 'abl', '^':"123"}, 'test.txt')
