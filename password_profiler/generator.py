@@ -34,6 +34,20 @@ class PasswordGenerator:
         if charset == '':
             raise ValueError('empty charset [check settings to make sure there is atleast 1 character]')
 
+    def set_charset(self, num, special, upper, lower):
+
+        # Getting the character set setup
+        charset = ""
+        if lower:
+            charset += alpha
+        if upper:
+            charset += alpha.upper()
+        if num:
+            charset += numeric
+        if special:
+            charset += symbols
+        
+        self.charset = charset
 
     # The fuction to create the password list based on give coditions
     def create_word_list(self, out_file):

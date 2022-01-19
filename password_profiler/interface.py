@@ -47,18 +47,83 @@ def mask_based():
     base = input("the base pass (the known parts and symbols):\n>>> ")
     symbols = input("the symbols in the password:\n>>> ")
     
+    # Checking if the symbols are valid
+    for i in symbols:
+        if i not in base:
+            print('key not in base')
+            exit()
+    
+    # Keeping the symbols clean
+    unique = ''
+    for i in symbols:
+        if i not in unique:
+            unique += i
+    
+    symbols = unique
     mapping = {}
 
     # Getting the mapping values
-    print('Mapping:')
+    print('\nMapping:')
     for i in symbols:
         vals = input(f"values for \"{i}\":\n>>> ")
         mapping[i] = vals
+
+        # Adding a new line
+        print()
 
     outfile = input("Output file name (or path):\n>>> ")
 
     gen.list_with_masks(base, mapping, outfile)
     print("File generated!")
+
+
+def create_word_list():
+
+    # Charset validator
+    def charset_validator(txt):
+        
+        val = input(txt)
+        val = val.upper()
+        
+        while True:
+        
+            # Giving true or false
+            if val == 'Y':
+                return True
+            elif val == 'N':
+                return False
+            else:
+                print("invalid option!")
+                val = input('>>>').upper()
+
+    # Length values
+    min_len = int(input("minimum length:"))
+    max_len = int(input("maximum length:"))
+
+    # Getting if charset already known
+    charset = input("have a specific set of character in mind (empty if none)?\n>>> ")
+    
+    # Setting up the generator
+    gen = generator.PasswordGenerator(min_len=min_len, max_len=max_len)
+
+    # Setting up charset
+    if not charset:
+        upper = charset_validator("Has upper case characters [Y or N]:\n>>> ")
+        lower = charset_validator("Has lower case characters [Y or N]:\n>>> ")
+        numeric = charset_validator("Has numerical characters [Y or N]:\n>>> ")
+        specials = charset_validator("Has special characters [Y or N]:\n>>> ")
+
+        # Updating the generator
+        gen.set_charset(numeric, specials, upper, lower)
+    
+    # Updating the generator if a charset is already given
+    else:
+        gen.charset = charset
+    
+    # Getting the output file name and running the generator
+    outfile = input("\nOutput file name (or path):\n>>> ")
+    gen.create_word_list(outfile)
+    print("done!")
 
 
 # The Start up banner
