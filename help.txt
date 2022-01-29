@@ -1,0 +1,4 @@
+options:
+- l for simple list generation 
+- i for interactive (target based pass gen)
+- k for lists with known characters

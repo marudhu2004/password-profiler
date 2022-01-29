@@ -34,7 +34,20 @@ def main():
 
 # The help page
 def print_help():
-    pass
+    
+    # opening the file containing the msg
+    with open('help.txt', 'r') as file:
+
+        # reading the content
+        content = file.readlines()
+
+        # Generating the help msg
+        help_message = ""
+        for i in content:
+            help_message += i
+
+        # Printing out the help message
+        print(help_message)
 
 
 # Mask terminal prompt
