@@ -129,6 +129,12 @@ class TestListsWithMasks(unittest.TestCase):
         # Checking if the wordlist is properly generated
         check_file(self, 'tests/out.txt', 'tests/wordlists/masked/multi_masks.txt')
 
+    def test_duplicates_in_charset(self):
+        # Creating the wordlist
+        self.generator.list_with_masks('^hello^!!!', {'^': '123344', '!': 'abbcd'}, 'tests/out.txt')
+
+        check_file(self, 'tests/out.txt', 'tests/wordlists/masked/multi_masks.txt')
+
     def tearDown(self):
         path = os.path.join(os.getcwd(), 'tests/out.txt')
         

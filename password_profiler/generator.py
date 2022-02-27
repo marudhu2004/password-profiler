@@ -123,7 +123,18 @@ class PasswordGenerator:
 
     # Dealing with lists with know chars
     def list_with_masks(self, base, mapping, outfile):
+
+        # helper func to clean charsets
+        def give_unique_charset(charset):
+            cleaned_charset = ""
+            for char in charset:
+                if char not in cleaned_charset: cleaned_charset += char
+            return cleaned_charset
         
+        # cleaning the mappings
+        for char_set in mapping:
+            mapping[char_set] = give_unique_charset(mapping[char_set])
+       
         # Setting up required info
         keys = mapping.keys()
         fill_string = [i for i in base if i in keys]
